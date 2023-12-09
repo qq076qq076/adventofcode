@@ -7,18 +7,17 @@ a.split('\n').reduce((pre, cur, curI) => {
     const patternG = /\b(\d+) green\b/g;
     const patternR = /\b(\d+) red\b/g;
     const patternB = /\b(\d+) blue\b/g;
-    let isPass = true;
+    let r = 0, g = 0, b = 0;
     const setList = cur.substring(8).split(';');
     for (let i = 0; i < setList.length; i++) {
         let set = setList[i];
         const G = parseInt(set.match(patternG)) || 0;
         const R = parseInt(set.match(patternR)) || 0;
         const B = parseInt(set.match(patternB)) || 0;
-        isPass = G <= 13 && R <= 12 && B <= 14;
-        if (!isPass) {
-            break;
-        }
+        r = Math.max(r, R);
+        b = Math.max(b, B);
+        g = Math.max(g, G);
     }
-    console.log('isPass:', isPass, 'Game;', curI + 1, 'total:', (isPass) ? curI + 1 + pre : pre)
-    return (isPass) ? curI + 1 + pre : pre
+    console.log('part sum:', r * b * g,)
+    return r * b * g + pre
 }, 0)
