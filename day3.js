@@ -1,10 +1,16 @@
 function getNumberList(line, index) {
-    return line.match(/\b\d+\b/g)?.map(match => ({
-        number: parseInt(match),
-        index,
-        start: line.indexOf(match),
-        end: line.indexOf(match) + match.length
-    })) || [];
+    const list = [];
+    line.match(/\b\d+\b/g)?.forEach((match, matchIndex) => {
+        const lastEnd = matchIndex > 0 ? list[matchIndex - 1].end : 0;
+        const start = line.indexOf(match, lastEnd);
+        list.push({
+            number: parseInt(match),
+            index,
+            start,
+            end: start + match.length
+        })
+    });
+    return list;
 }
 
 function hasSymbol(numberItem, str) {
@@ -30,27 +36,8 @@ function res(str) {
     const schematicList = str.split('\n');
     return schematicList.reduce((sum, curr, currIndex) => {
         const total = getNumberList(curr, currIndex)
-            .filter((numberItem) => {
-                const result = isPartNumber(numberItem, schematicList)
-                console.log('numberItem', numberItem.number, 'result:', result)
-                return result;
-            })
+            .filter((numberItem) => isPartNumber(numberItem, schematicList))
             .reduce((lineSum, numberItem) => lineSum + numberItem.number, 0);
-        console.log('total',total)
-        console.log('sum',sum + total)
-        console.log('-----------')
         return sum + total;
     }, 0)
 }
-
-var a = `467..114..
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755.
-...$.*....
-.664.598..`;
-console.log(res(a))
