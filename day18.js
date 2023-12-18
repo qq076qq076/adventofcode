@@ -41,6 +41,14 @@ function dig(digPlan, position, result) {
     if (!result[position.y]) {
         result[position.y] = [];
     }
+    if (position.y < 0) {
+        result.unshift([]);
+        position.y = position.y + 1
+    }
+    if (position.x < 0) {
+        result[position.y].unshift([]);
+        position.x = position.x + 1
+    }
     result[position.y][position.x] = '#';
     toNext(digPlan, position, result);
 }
@@ -64,7 +72,7 @@ function start(input) {
             }
         }
     })
-    console.log(result.map((line) => line.join('')).join('').length)
+    console.log(result)
 }
 
 var input = `R 6 (#70c710)
